@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            "atl_ide_webappserver = atl_blockly_ide_py_pkg.atl_ide_webappserver:main"
         ],
     },
 )

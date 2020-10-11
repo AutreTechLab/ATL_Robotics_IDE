@@ -1,0 +1,179 @@
+    <category name="{catCozmo}" colour="96">
+      <category name="{catCozmoEvents}" colour="96">
+        <block type="cozmo_on_cube_tapped">
+        </block>
+        <block type="cozmo_wait_for_tap">
+        </block>
+        <block type="cozmo_tapped_cube_number_boolean">
+        </block>
+        <block type="cozmo_stop">
+        </block>
+      </category>
+      <category name="{catCozmoActuatorsBasic}" colour="96">
+        <block type="cozmo_say">
+          <value name="TEXT">
+            <shadow type="text">
+              <field name="TEXT">{BlockCozmoSay01}</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="cozmo_play_animation">
+        </block>
+        <block type="cozmo_play_emotion">
+        </block>
+        <block type="cozmo_lift">
+          <value name="LIFT">
+            <shadow type="math_number">
+              <field name="NUM">0.0</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="cozmo_head">
+          <value name="HEAD">
+            <shadow type="math_angle">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="cozmo_drive_distance_speed">
+          <value name="DISTANCE">
+            <shadow type="math_number">
+              <field name="NUM">10</field>
+            </shadow>
+          </value>
+          <value name="SPEED">
+            <shadow type="math_number">
+              <field name="NUM">10</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="cozmo_drive_wheels_speed">
+          <value name="L_SPEED">
+            <shadow type="math_number">
+              <field name="NUM">10</field>
+            </shadow>
+          </value>
+          <value name="R_SPEED">
+            <shadow type="math_number">
+              <field name="NUM">10</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="cozmo_turn">
+          <value name="ANGLE">
+            <shadow type="math_angle">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="cozmo_stop">
+        </block>
+        <block type="cozmo_control_cube_lights">
+        </block>
+        <block type="cozmo_control_backpack_lights">
+        </block>
+      </category>
+      <category name="{catCozmoActuatorsAdvanced}" colour="96">
+        <block type="cozmo_goto_origin">
+        </block>
+        <block type="cozmo_drive_to">
+          <value name="X">
+            <shadow type="math_number">
+              <field name="NUM">45</field>
+            </shadow>
+          </value>
+          <value name="Y">
+            <shadow type="math_number">
+              <field name="NUM">45</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="cozmo_add_static_model">
+          <value name="X1">
+            <shadow type="math_number">
+              <field name="NUM">10</field>
+            </shadow>
+          </value>
+          <value name="Y1">
+            <shadow type="math_number">
+              <field name="NUM">10</field>
+            </shadow>
+          </value>
+          <value name="X2">
+            <shadow type="math_number">
+              <field name="NUM">20</field>
+            </shadow>
+          </value>
+          <value name="Y2">
+            <shadow type="math_number">
+              <field name="NUM">20</field>
+            </shadow>
+          </value>
+          <value name="DEPTH">
+            <shadow type="math_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+          <value name="HEIGHT">
+            <shadow type="math_number">
+              <field name="NUM">3</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="cozmo_maze">
+        </block>
+        <block type="cozmo_define_custom_cube">
+          <field name="CUBE_DIMENSION">45</field>
+          <field name="MARKER_DIMENSION">35</field>
+        </block>
+        <block type="cozmo_define_custom_wall">
+          <field name="CUSTOM_TYPE">CustomObjectTypes.CustomType01</field>
+          <field name="WALL_X_DIMENSION">90</field>
+          <field name="WALL_Y_DIMENSION">120</field>
+          <field name="MARKER_DIMENSION">35</field>
+        </block>
+        <block type="cozmo_define_custom_box">
+          <field name="CUSTOM_MARKER_FACE_1">CustomObjectMarkers.Hexagons2</field>
+          <field name="CUSTOM_MARKER_FACE_2">CustomObjectMarkers.Triangles2</field>
+          <field name="CUSTOM_MARKER_FACE_3">CustomObjectMarkers.Triangles3</field>
+          <field name="CUSTOM_MARKER_FACE_4">CustomObjectMarkers.Triangles4</field>
+          <field name="CUSTOM_MARKER_FACE_5">CustomObjectMarkers.Triangles5</field>
+          <field name="CUSTOM_MARKER_FACE_6">CustomObjectMarkers.Hexagons5</field>
+          <field name="CUSTOM_TYPE">CustomObjectTypes.CustomType02</field>
+          <field name="WALL_DEEP_DIMENSION">100</field>
+          <field name="WALL_WITH_DIMENSION">20</field>
+          <field name="WALL_TALL_DIMENSION">50</field>
+          <field name="MARKER_DIMENSION">35</field>
+        </block>
+      </category>
+      <category name="{catCozmoSensors}" colour="96">
+        <block type="cozmo_cube_seen_number_boolean">
+        </block>
+        <block type="cozmo_cube_visible_number_boolean">
+        </block>
+        <block type="cozmo_cube_distance_to">
+        </block>
+        <block type="cozmo_cube_distance_between">
+          <field name="CUBE1_NUM">1</field>
+          <field name="CUBE2_NUM">2</field>
+        </block>
+        <block type="cozmo_cube_turn_toward">
+        </block>
+        <block type="cozmo_set_cube_model">
+        </block>
+        <block type="cozmo_object_visible_number_boolean">
+        </block>
+        <block type="cozmo_wait_for_custom_object">
+        </block>
+      </category>
+      <category name="{catCozmoUtils}" colour="96">
+        <block type="cozmo_cube_pickup">
+        </block>
+        <block type="cozmo_cube_place_on_ground">
+        </block>
+        <block type="cozmo_cube_place_on_cube">
+        </block>
+        <block type="cozmo_free_will">
+        </block>
+      </category>
+     </category>

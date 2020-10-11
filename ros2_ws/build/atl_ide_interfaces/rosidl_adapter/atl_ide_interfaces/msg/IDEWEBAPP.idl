@@ -1,0 +1,12 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from atl_ide_interfaces/msg/IDEWEBAPP.msg
+// generated code does not contain a copyright notice
+
+
+module atl_ide_interfaces {
+  module msg {
+    struct IDEWEBAPP {
+      string debug_message;
+    };
+  };
+};

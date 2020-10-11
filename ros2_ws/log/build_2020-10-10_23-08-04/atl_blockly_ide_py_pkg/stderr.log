@@ -1,0 +1,5 @@
+  File "/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg/lib/python3.8/site-packages/atl_blockly_ide_py_pkg/atl_ide_webappserver.py", line 40
+    (r'/()',ATLHomeHandler) , '../../../../../../../webapp_root')
+                                                                ^
+SyntaxError: closing parenthesis ')' does not match opening parenthesis '[' on line 39
+

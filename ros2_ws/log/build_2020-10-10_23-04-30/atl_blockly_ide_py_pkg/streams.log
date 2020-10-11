@@ -1,0 +1,24 @@
+[0.350s] Invoking command in '/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/src/atl_blockly_ide_py_pkg': PYTHONPATH=/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/atl_blockly_ide_py_pkg build --build-base /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/build/atl_blockly_ide_py_pkg/build install --prefix /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg --record /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/build/atl_blockly_ide_py_pkg/install.log --single-version-externally-managed
+[0.743s] running egg_info
+[0.744s] writing ../../build/atl_blockly_ide_py_pkg/atl_blockly_ide_py_pkg.egg-info/PKG-INFO
+[0.745s] writing dependency_links to ../../build/atl_blockly_ide_py_pkg/atl_blockly_ide_py_pkg.egg-info/dependency_links.txt
+[0.745s] writing entry points to ../../build/atl_blockly_ide_py_pkg/atl_blockly_ide_py_pkg.egg-info/entry_points.txt
+[0.745s] writing requirements to ../../build/atl_blockly_ide_py_pkg/atl_blockly_ide_py_pkg.egg-info/requires.txt
+[0.746s] writing top-level names to ../../build/atl_blockly_ide_py_pkg/atl_blockly_ide_py_pkg.egg-info/top_level.txt
+[0.802s] reading manifest file '../../build/atl_blockly_ide_py_pkg/atl_blockly_ide_py_pkg.egg-info/SOURCES.txt'
+[0.803s] writing manifest file '../../build/atl_blockly_ide_py_pkg/atl_blockly_ide_py_pkg.egg-info/SOURCES.txt'
+[0.803s] running build
+[0.804s] running build_py
+[0.804s] copying atl_blockly_ide_py_pkg/atl_ide_webappserver.py -> /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/build/atl_blockly_ide_py_pkg/build/lib/atl_blockly_ide_py_pkg
+[0.804s] running install
+[0.805s] running install_lib
+[0.807s] copying /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/build/atl_blockly_ide_py_pkg/build/lib/atl_blockly_ide_py_pkg/atl_ide_webappserver.py -> /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg/lib/python3.8/site-packages/atl_blockly_ide_py_pkg
+[0.807s] byte-compiling /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg/lib/python3.8/site-packages/atl_blockly_ide_py_pkg/atl_ide_webappserver.py to atl_ide_webappserver.cpython-38.pyc
+[0.810s] running install_data
+[0.810s] running install_egg_info
+[0.812s] removing '/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg/lib/python3.8/site-packages/atl_blockly_ide_py_pkg-0.0.0-py3.8.egg-info' (and everything under it)
+[0.813s] Copying ../../build/atl_blockly_ide_py_pkg/atl_blockly_ide_py_pkg.egg-info to /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg/lib/python3.8/site-packages/atl_blockly_ide_py_pkg-0.0.0-py3.8.egg-info
+[0.814s] running install_scripts
+[0.839s] Installing atl_ide_webappserver script to /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg/lib/atl_blockly_ide_py_pkg
+[0.839s] writing list of installed files to '/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/build/atl_blockly_ide_py_pkg/install.log'
+[0.881s] Invoked command in '/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/src/atl_blockly_ide_py_pkg' returned '0': PYTHONPATH=/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/atl_blockly_ide_py_pkg build --build-base /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/build/atl_blockly_ide_py_pkg/build install --prefix /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg --record /home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/build/atl_blockly_ide_py_pkg/install.log --single-version-externally-managed
