@@ -339,7 +339,7 @@ Code.renderContent = function() {
     Code.workspace.setVisible(true);
     var parsedUrl = new URL(window.location.href);
     var atlhost = parsedUrl.hostname;
-    var ws = new WebSocket("ws://" + atlhost + ":9090/blocksSub");
+    var ws = new WebSocket("ws://" + atlhost + ":8080/blocksSub"); //DODO
         ws.onopen = function() {
         ws.send("Workspace messaage");
             };
@@ -351,7 +351,7 @@ Code.renderContent = function() {
     Code.startCamera();
     var parsedUrl = new URL(window.location.href);
     var atlhost = parsedUrl.hostname;
-    var ws = new WebSocket("ws://" + atlhost + ":9090/cozmo_messagesSub");
+    var ws = new WebSocket("ws://" + atlhost + ":8080/cozmo_messagesSub"); // DODO
     ws.onopen = function() {
         var msg = "<hr>";
         ws.send(msg);
@@ -366,7 +366,7 @@ Code.renderContent = function() {
   } else if (Code.selected == 'console') {
         var parsedUrl = new URL(window.location.href);
         var atlhost = parsedUrl.hostname;
-        var ws = new WebSocket("ws://" + atlhost + ":9090/consoleSub");
+        var ws = new WebSocket("ws://" + atlhost + ":8080/consoleSub"); // DODO
         ws.onopen = function() {
         ws.send("Console Messages");
             };
@@ -913,6 +913,7 @@ Code.getFiles = function() {
 };
 
 Code.runRemotely = function() {
+  alert("TODO - delete after debugging run remotely")
   Code.sendCodeToUrl('/robot/submit');
 }
 

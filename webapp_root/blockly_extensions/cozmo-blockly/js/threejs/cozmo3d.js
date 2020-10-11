@@ -136,13 +136,13 @@ class Static {
 
 class WallBrick extends Static {
   constructor(scene, x1, y1, x2, y2, depth, height) {
-    super(scene, x1, y1, x2, y2, depth, height, 'img/3d/wall_brick.png');
+    super(scene, x1, y1, x2, y2, depth, height, 'cozmo_blockly/img/3d/wall_brick.png');
   }
 }
 
 class WallWood extends Static {
   constructor(scene, x1, y1, x2, y2, depth, height) {
-    super(scene, x1, y1, x2, y2, depth, height, 'img/3d/wall_wood.png');
+    super(scene, x1, y1, x2, y2, depth, height, 'cozmo_blockly/img/3d/wall_wood.png');
   }
 }
 
@@ -150,7 +150,7 @@ class Cozmo extends Dynamic {
   constructor(scene) {
     super(scene, 0, 42, 0);
 
-    var cozmoTexture = loadTexture( 'img/3d/cozmo.png' );
+    var cozmoTexture = loadTexture( 'cozmo_blockly/img/3d/cozmo.png' );
     var cozmoMaterial = new THREE.MeshBasicMaterial( { map: cozmoTexture, side: THREE.FrontSide } );
     // var cubeMaterial = new THREE.MeshLambertMaterial( { map: cubeTexture, side: THREE.FrontSide } );
 
@@ -174,7 +174,7 @@ class Crate extends Dynamic {
   constructor(scene) {
     super(scene, 0, 22.15, 0);
 
-    var cubeTexture = loadTexture('img/3d/crate.jpg');
+    var cubeTexture = loadTexture('cozmo_blockly/img/3d/crate.jpg');
     var cubeMaterial = new THREE.MeshBasicMaterial( { map: cubeTexture, side: THREE.FrontSide, transparent: true } );
     // var cubeMaterial = new THREE.MeshBasicMaterial( { color: 0x225522, side: THREE.FrontSide } );
     var cubeGeometry = new THREE.BoxGeometry( 44.3, 44.3, 44.3 );
@@ -204,13 +204,13 @@ class Mob extends Dynamic {
 
 class Zombie extends Mob {
   constructor(scene) {
-    super(scene, 'img/3d/zombiehd.png');
+    super(scene, 'cozmo_blockly/img/3d/zombiehd.png');
   }
 }
 
 class Spiderman extends Mob {
   constructor(scene) {
-    super(scene, 'img/3d/spiderman.png');
+    super(scene, 'cozmo_blockly/img/3d/spiderman.png');
   }
 }
 
@@ -480,7 +480,7 @@ function Cozmo3d() {
     that._scene.add(light);
 
     // FLOOR
-    var floorTexture = loadTexture( 'img/3d/grasslight-thin.jpg' );
+    var floorTexture = loadTexture( 'cozmo_blockly/img/3d/grasslight-thin.jpg' );
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
     floorTexture.repeat.set( 1, 10 );
     that._floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.BackSide, transparent: true } );

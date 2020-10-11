@@ -3,6 +3,10 @@ import rclpy
 from rclpy.node import Node
 from atl_ide_interfaces.msg import IDEWEBAPP
 import os
+import re
+import json
+
+from subprocess import Popen
 
 try:
 	import tornado.ioloop
@@ -77,7 +81,10 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 				self.render(blockly_extension_path + 'index.html', includes=includes, cozmo_blocks=cozmo_blocks, thymio_blocks=thymio_blocks, name="Give Name")
 
 		class SavesHandler(tornado.web.RequestHandler):
+			def initialize(self, folder):
+				self.folder = folder
 			def get(self, folder, file):
+				folder = self.folder
 				file = file.strip('/')
 				if len(file) == 0:
 					# Send folder index
@@ -87,7 +94,7 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 						relativePath = os.path.join(folder, filename)
 						if os.path.isfile(relativePath) and filename.endswith('.xml'):
 							storedFiles.append(removeXmlRegex.sub('', filename))
-					self.get_logger().info("Returning files list: " + str(storedFiles))
+					print("Returning files list: " + str(storedFiles))
 					self.write(json.dumps(storedFiles).encode('utf-8'))
 					self.set_header('Content-type', 'application/json')
 				else:
@@ -98,6 +105,7 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 					self.write(data)
 
 			def put(self, folder, file):
+				folder = self.folder
 				file = file.strip('/')
 				print('[Server] SavesHandler: Saving ' + file)
 				data = self.request.body
@@ -111,8 +119,8 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 				data = self.request.body
 				try:
 					code = str(data, 'utf-8')
-					self.get_logger().info('Received code: ')
-					self.get_logger().info(code)
+					print('Received code: ')
+					print(code)
 					with (yield self.application._lock.acquire()):
 						self.application._executor.start(code)
 					self.write('OK')
@@ -123,14 +131,50 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 		class RobotTerminateHandler(tornado.web.RequestHandler):
 			@gen.coroutine
 			def post(self):
-				self.get_logger().info('Terminating code')
+				print('Terminating code')
 				with (yield self.application._lock.acquire()):
 					self.application._executor.stop()
 				self.write('OK')
 
+		class WSBlocksSubHandler(tornado.websocket.WebSocketHandler):
+			def open(self):
+				print('[Server] WSBlocksSub client connected')
+				self.application._blocks = self
+
+			def on_close(self):
+				print('[Server] WSBlocksSub client disconnected')
+
+			def on_message(self, message):
+				print('[Server] WSBlocksSub client message: ' + message)
+				# echo message back to client
+				self.write_message(message)
+
+		class WSBlocksPubHandler(tornado.websocket.WebSocketHandler):
+			def open(self):
+				print('[Server]  WSBlocksSPub Handler client connected')
+
+			def on_message(self, message):
+				try:
+					if self.application._blocks:
+						self.application._blocks.write_message(message)
+				except Exception:
+					pass
+
+			def on_close(self):
+				print('[Server]  WSConsolePub client disconnected')
+
 		class basicRequestHandler(tornado.web.RequestHandler):
 			def get(self):
 				self.write('Hello, world!!!!!!')
+
+# 	End of WebHandler definitions
+
+		def stop(self):
+			# with (yield self._lock.acquire()):
+			# 	self._executor.stop()
+			# 	tornado.ioloop.IOLoop.instance().stop()
+			self._executor.stop()
+			tornado.ioloop.IOLoop.instance().stop()
 
 		atl_IDE_webappserver_install_dir = self.get_parameter("atl_IDE_webappserver_install_dir").value
 		self.get_logger().info("ATL install Dir is " + str(atl_IDE_webappserver_install_dir))
@@ -139,6 +183,7 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 			"gallery_path": str(atl_IDE_webappserver_install_dir) + 'gallery/',
 			"webapp_root": str(atl_IDE_webappserver_install_dir),
 			"static_path": str(atl_IDE_webappserver_install_dir),
+			"saves_path": str(atl_IDE_webappserver_install_dir) + 'saves/',
 			"blockly_extensions_path": str(atl_IDE_webappserver_install_dir) + 'blockly_extensions/',
 			"closure_library_path": str(atl_IDE_webappserver_install_dir) + 'closure-library/',
 			"blockly_path": str(atl_IDE_webappserver_install_dir) + 'blockly/',
@@ -163,15 +208,16 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 			(r'/cozmo-blockly/(.*)', tornado.web.StaticFileHandler, dict(path=settings['cozmo_blockly_path'])),
 			(r'/thymio-blockly/(.*)', tornado.web.StaticFileHandler, dict(path=settings['thymio_blockly_path'])),
 			(r'/closure-library/(.*)', tornado.web.StaticFileHandler , dict(path=settings['closure_library_path'])),
-			(r'/(saves)/(.*)', SavesHandler),
+			(r'/(saves)/(.*)', SavesHandler , dict(folder=settings['saves_path'])),
+			#(r'/(saves)/(.*)', SavesHandler , dict(folder=settings['saves'])),
 			(r'/robot/submit', RobotSubmitHandler),
-			# (r'/robot/terminate', CozmoBlockly.RobotTerminateHandler),
+			(r'/robot/terminate', RobotTerminateHandler),
 			# (r'/camSub', CozmoBlockly.WSCameraSubHandler),
 			# (r'/camPub', CozmoBlockly.WSCameraPubHandler),
 			# (r'/WsSub', CozmoBlockly.WS3dSubHandler),
 			# (r'/WsPub', CozmoBlockly.WS3dPubHandler),
-			# (r'/blocksSub', CozmoBlockly.WSBlocksSubHandler),
-			# (r'/blocksPub', CozmoBlockly.WSBlocksPubHandler),
+			(r'/blocksSub', WSBlocksSubHandler),
+			(r'/blocksPub', WSBlocksPubHandler),
 			# (r'/consoleSub', CozmoBlockly.WSConsoleSubHandler),
 			# (r'/consolePub', CozmoBlockly.WSConsolePubHandler),
 			# (r'/cozmo_messagesSub', CozmoBlockly.WSCozmo_messagesSubHandler),
@@ -180,6 +226,12 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 
 		app.listen(self.get_parameter("webapp_port").value)
 		self.get_logger().info("I'm listening on port " + str(self.get_parameter("webapp_port").value))
+
+		app._executor = None # CodeExecutor(args.nonsecure, args.nocozmo, args.aruco)
+		app._lock = locks.Lock()
+		app._wsCamera = None
+		app._ws3d = None
+
 		tornado.ioloop.IOLoop.current().start()
 
 	def atl_IDE_webappserver(self):
