@@ -1,5 +1,0 @@
-  File "/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/ros2_ws/install/atl_blockly_ide_py_pkg/lib/python3.8/site-packages/atl_blockly_ide_py_pkg/atl_ide_webappserver.py", line 19
-    global webapp_root = ""
-                       ^
-SyntaxError: invalid syntax
-
