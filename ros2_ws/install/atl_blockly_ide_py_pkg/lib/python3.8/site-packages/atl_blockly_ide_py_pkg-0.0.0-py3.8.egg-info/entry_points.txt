@@ -1,3 +1,0 @@
-[console_scripts]
-atl_ide_webappserver = atl_blockly_ide_py_pkg.atl_ide_webappserver:main
-
