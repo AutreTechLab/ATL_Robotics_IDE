@@ -2,9 +2,13 @@
 import rclpy
 from rclpy.node import Node
 from atl_ide_interfaces.msg import IDEWEBAPP
+from atl_ide_interfaces.srv import IDEREGISTERROBOT
+from atl_ide_interfaces.msg import PYTHONCODEEXECUTORSTATUS
+from atl_ide_interfaces.srv import PYTHONCODEEXECUTOR
 import os
 import re
 import json
+from functools import partial
 
 from subprocess import Popen
 
@@ -19,25 +23,62 @@ try:
 	from tornado.options import options, define
 	from tornado.queues import Queue
 except ImportError:
-	self.get_logger().error("Cannot import Tornado: Do `pip3 install --user tornado` to install")
+	print("Cannot import Tornado: Do `pip3 install --user tornado` to install")
 
 # Global variables
 atl_ide_debug_level = 1 # 0 = off, 1 = debug inflo, 2 = load debuggable blockly js
+node = ""
+code = ""
+
 
 
 class atl_IDE_webappserver_node(Node): # MODIFY NAME
 	def __init__(self):
 		super().__init__("atl_IDE_webappserver_node") # MODIFY NAME
 		self.declare_parameter("webapp_port", 8080)
-		self.declare_parameter("notejs_port", 8081)
 		self.declare_parameter("debug_level", 0)
 		self.declare_parameter("atl_IDE_webappserver_install_dir", '/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/')
 
 		self.IDEWEBAPP_status_publisher_ = self.create_publisher(IDEWEBAPP, "IDEWEBAPP_publisher", 10)
 
-#		self.create_timer(1.0, self.atl_IDE_webappserver) # Not needed as we use the tornado.ioloop.IOLoop.current().start()
+		def call_python_code_executor_service(target_bot, debug_level, code):
+			client = self.create_client(PYTHONCODEEXECUTOR, 'python_code_executor_service')
+			while not client.wait_for_service(1.0):
+			 	self.get_logger().info("Waiting for python_codselfe_executor_service Server ...")
+			request = PYTHONCODEEXECUTOR.Request()
+			request.target_bot = target_bot
+			request.debug_level = debug_level
+			request.code = code
+			future = client.call_async(request)
+			future.add_done_callback(partial(callback_call_PYTHONCODEEXECUTOR_server, code=request.code))
 
-#		Tornado WEB Handlers - GET requests
+		def callback_ide_register_robot(self, request, response):
+			print("Register Robot Service: " + str(request.id) + " , " + str(request.type) + " , " + str(request.status_publisher))
+			response.success = True
+			return response
+
+		def atl_IDE_webappserver():
+			msg = IDEWEBAPP()
+			msg.debug_message = "Hi there, doing good!"
+			self.IDEWEBAPP_status_publisher_.publish(msg)
+			self.get_logger().info(
+				"IDE webserver running! I am listening at port " + str(self.get_parameter("webapp_port").value))
+			tornado.ioloop.IOLoop.current().start()
+
+		self.ide_register_robot_service_ = self.create_service(IDEREGISTERROBOT, "ide_register_robot", callback_ide_register_robot)
+		self.create_timer(1.0, atl_IDE_webappserver) # Not needed as we use the tornado.ioloop.IOLoop.current().start()
+		atl_IDE_webappserver_install_dir = self.get_parameter("atl_IDE_webappserver_install_dir").value
+		self.get_logger().info("ATL install Dir is " + str(atl_IDE_webappserver_install_dir))
+
+		def callback_call_PYTHONCODEEXECUTOR_server(self, future, leds_top, leds_bottom_left):
+			try:
+				response = future.result()
+				self.get_logger().info("Thymio2MotorSrv Service call :" + str(code))
+			except Exception as e:
+				self.get_logger().error("Thymio2MotorSrv Service call failed %r" % (e,))
+
+
+		#	Tornado WEB Handlers - GET requests
 		class IndexHandler(tornado.web.RequestHandler): # ATL IDE Langing page
 			def initialize(self, path):
 				self.path = path
@@ -121,9 +162,9 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 					code = str(data, 'utf-8')
 					print('Received code: ')
 					print(code)
-					with (yield self.application._lock.acquire()):
-						self.application._executor.start(code)
-					self.write('OK')
+					target_bot = "THYMIO"
+					debug_level = 0
+					call_python_code_executor_service(target_bot, debug_level, code)
 				except Exception as e:
 					err = str(e)
 					raise tornado.web.HTTPError(500, err, reason=err)
@@ -163,21 +204,47 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 			def on_close(self):
 				print('[Server]  WSConsolePub client disconnected')
 
+		class WS3dSubHandler(tornado.websocket.WebSocketHandler):
+			def open(self):
+				print('[Server] 3dSub client connected')
+				self.application._ws3d = self
+
+			def on_close(self):
+				print('[Server] 3dSub client disconnected')
+
+			def on_message(self, message):
+				print('[Server] 3dSub client message: ' + message)
+				# echo message back to client
+				self.write_message(message)
+
+		class WS3dPubHandler(tornado.websocket.WebSocketHandler):
+			def open(self):
+				print('[Server] 3dPub client connected')
+
+			def on_message(self, message):
+				try:
+					if self.application._ws3d:
+						self.application._ws3d.write_message(message)
+				except Exception:
+					pass
+
+			def on_close(self):
+				print('[Server] 3dPub client disconnected')
+
+
 		class basicRequestHandler(tornado.web.RequestHandler):
 			def get(self):
 				self.write('Hello, world!!!!!!')
 
-# 	End of WebHandler definitions
+		# 	End of WebHandler definitions
 
-		def stop(self):
-			# with (yield self._lock.acquire()):
-			# 	self._executor.stop()
-			# 	tornado.ioloop.IOLoop.instance().stop()
-			self._executor.stop()
-			tornado.ioloop.IOLoop.instance().stop()
+				# def stop(self):
+				# 	# with (yield self._lock.acquire()):
+				# 	# 	self._executor.stop()
+				# 	# 	tornado.ioloop.IOLoop.instance().stop()
+				# 	self._executor.stop()
+				# 	tornado.ioloop.IOLoop.instance().stop()
 
-		atl_IDE_webappserver_install_dir = self.get_parameter("atl_IDE_webappserver_install_dir").value
-		self.get_logger().info("ATL install Dir is " + str(atl_IDE_webappserver_install_dir))
 
 		settings = {
 			"gallery_path": str(atl_IDE_webappserver_install_dir) + 'gallery/',
@@ -214,8 +281,8 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 			(r'/robot/terminate', RobotTerminateHandler),
 			# (r'/camSub', CozmoBlockly.WSCameraSubHandler),
 			# (r'/camPub', CozmoBlockly.WSCameraPubHandler),
-			# (r'/WsSub', CozmoBlockly.WS3dSubHandler),
-			# (r'/WsPub', CozmoBlockly.WS3dPubHandler),
+			(r'/WsSub', WS3dSubHandler),
+			(r'/WsPub', WS3dPubHandler),
 			(r'/blocksSub', WSBlocksSubHandler),
 			(r'/blocksPub', WSBlocksPubHandler),
 			# (r'/consoleSub', CozmoBlockly.WSConsoleSubHandler),
@@ -232,18 +299,12 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 		app._wsCamera = None
 		app._ws3d = None
 
-		tornado.ioloop.IOLoop.current().start()
-
-	def atl_IDE_webappserver(self):
-		msg = IDEWEBAPP()
-		msg.debug_message = "Hi there, doing good!"
-		self.IDEWEBAPP_status_publisher_.publish(msg)
-		self.get_logger().info("IDE webserver running! I am listening at port " + str(self.get_parameter("webapp_port").value))
 
 
 def main(args=None):
 	rclpy.init(args=args)
-	node = atl_IDE_webappserver_node() # MODIFY NAME
+	node = atl_IDE_webappserver_node()
+	print("Node =" +str(node))
 	rclpy.spin(node)
 	rclpy.shutdown()
 

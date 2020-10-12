@@ -719,12 +719,8 @@ Code.sendCodeToUrl = function(urlToSendTo) {
 
   // Static objects are to be populated from the program every time.
   Code.cozmo3d.clearStatics();
-  if (NONSECURE) {
-    code = Blockly.Python.workspaceToCode(Code.workspace);
-  } else {
     var xml = Blockly.Xml.workspaceToDom(Code.workspace);
     code = Blockly.Xml.domToText(xml);
-  }
 
   var onWsConnected = function() {
     // Send code after highlighter websocket is connected.
@@ -913,7 +909,6 @@ Code.getFiles = function() {
 };
 
 Code.runRemotely = function() {
-  alert("TODO - delete after debugging run remotely")
   Code.sendCodeToUrl('/robot/submit');
 }
 

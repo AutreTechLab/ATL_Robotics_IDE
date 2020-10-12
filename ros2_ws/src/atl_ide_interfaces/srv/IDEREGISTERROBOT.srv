@@ -1,0 +1,5 @@
+string id           # the unique ID of the robot is defined as a parameter when launching the robot bridge node
+string type         # COZMO, THYMIOII
+string status_publisher    # the robot's status publisher
+---
+bool success        # True when registration is OK, otherwise false
