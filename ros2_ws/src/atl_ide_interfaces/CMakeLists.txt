@@ -16,6 +16,9 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/IDEWEBAPP.msg"
+  "msg/PYTHONCODEEXECUTORSTATUS.msg"
+  "srv/IDEREGISTERROBOT.srv"
+  "srv/PYTHONCODEEXECUTOR.srv"
 )
 
 

@@ -10,8 +10,6 @@ import re
 import json
 from functools import partial
 
-from subprocess import Popen
-
 try:
 	import tornado.ioloop
 	import tornado.web
@@ -27,9 +25,7 @@ except ImportError:
 
 # Global variables
 atl_ide_debug_level = 1 # 0 = off, 1 = debug inflo, 2 = load debuggable blockly js
-node = ""
 code = ""
-
 
 
 class atl_IDE_webappserver_node(Node): # MODIFY NAME
@@ -39,9 +35,15 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 		self.declare_parameter("debug_level", 0)
 		self.declare_parameter("atl_IDE_webappserver_install_dir", '/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/')
 
+		def atl_logger(log_level , log_message):
+			if log_level == "E":
+				self.get_logger().error(str(log_message))
+			else:
+				self.get_logger().info(str(log_message))
+
 		self.IDEWEBAPP_status_publisher_ = self.create_publisher(IDEWEBAPP, "IDEWEBAPP_publisher", 10)
 
-		def call_python_code_executor_service(target_bot, debug_level, code):
+		def call_python_code_executor_service(target_bot, debug_level, code, action):
 			client = self.create_client(PYTHONCODEEXECUTOR, 'python_code_executor_service')
 			while not client.wait_for_service(1.0):
 			 	self.get_logger().info("Waiting for python_codselfe_executor_service Server ...")
@@ -49,31 +51,33 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 			request.target_bot = target_bot
 			request.debug_level = debug_level
 			request.code = code
+			request.action = action
 			future = client.call_async(request)
 			future.add_done_callback(partial(callback_call_PYTHONCODEEXECUTOR_server, code=request.code))
+			atl_logger("I", "python_codselfe_executor_service")
 
 		def callback_ide_register_robot(self, request, response):
-			print("Register Robot Service: " + str(request.id) + " , " + str(request.type) + " , " + str(request.status_publisher))
+			atl_logger('I',"Register Robot Service: " + str(request.id) + " , " + str(request.type) + " , " + str(request.status_publisher))
 			response.success = True
 			return response
 
 		def atl_IDE_webappserver():
 			msg = IDEWEBAPP()
-			msg.debug_message = "Hi there, doing good!"
+			msg.debug_message = "IDE webserver running! I am listening at port " + str(self.get_parameter("webapp_port").value)
 			self.IDEWEBAPP_status_publisher_.publish(msg)
-			self.get_logger().info(
-				"IDE webserver running! I am listening at port " + str(self.get_parameter("webapp_port").value))
+			self.get_logger().info("Tornado IOLoop START")
 			tornado.ioloop.IOLoop.current().start()
 
 		self.ide_register_robot_service_ = self.create_service(IDEREGISTERROBOT, "ide_register_robot", callback_ide_register_robot)
-		self.create_timer(1.0, atl_IDE_webappserver) # Not needed as we use the tornado.ioloop.IOLoop.current().start()
+		self.create_timer(1.0, atl_IDE_webappserver)
 		atl_IDE_webappserver_install_dir = self.get_parameter("atl_IDE_webappserver_install_dir").value
 		self.get_logger().info("ATL install Dir is " + str(atl_IDE_webappserver_install_dir))
 
-		def callback_call_PYTHONCODEEXECUTOR_server(self, future, leds_top, leds_bottom_left):
+		def callback_call_PYTHONCODEEXECUTOR_server(self, future, code):
 			try:
 				response = future.result()
 				self.get_logger().info("Thymio2MotorSrv Service call :" + str(code))
+				return response
 			except Exception as e:
 				self.get_logger().error("Thymio2MotorSrv Service call failed %r" % (e,))
 
@@ -83,10 +87,10 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 			def initialize(self, path):
 				self.path = path
 			def get(self, path):
-				print('self.path :' + str(self.path))
+				atl_logger('I','self.path :' + str(self.path))
 				self.render(self.path + 'index.html')
 				if atl_ide_debug_level > 0:
-					print("[DEBUG Level "+str(atl_ide_debug_level)+": Serving index.html form " + str(self.path))
+					atl_logger('I',"[DEBUG Level "+str(atl_ide_debug_level)+": Serving index.html form " + str(self.path))
 
 		class ATLIDEWorkspaceHandler(tornado.web.RequestHandler):
 			def initialize(self, path):
@@ -96,8 +100,8 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 				cozmo_blockly_path = str(blockly_extension_path) + 'cozmo-blockly/'
 				thymio_blockly_path = str(blockly_extension_path) + 'thymio-blockly/'
 
-				print("[DEBUG Level " + str(atl_ide_debug_level) + ": cozmo_blockly_path " + str(cozmo_blockly_path))
-				print("[DEBUG Level " + str(atl_ide_debug_level) + ": thymio_blockly_path " + str(thymio_blockly_path))
+				atl_logger('I',"[DEBUG Level " + str(atl_ide_debug_level) + ": cozmo_blockly_path " + str(cozmo_blockly_path))
+				atl_logger('I',"[DEBUG Level " + str(atl_ide_debug_level) + ": thymio_blockly_path " + str(thymio_blockly_path))
 
 				loader = tornado.template.Loader(cozmo_blockly_path, whitespace='all')
 				file = 'includes.template'
@@ -117,7 +121,7 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 				t = loader.load(file)
 				thymio_blocks = t.generate()
 
-				print('[Server] HomeHandler: Loading ' + cozmo_blockly_path + ' and ' + thymio_blockly_path)
+				atl_logger('I','[Server] HomeHandler: Loading ' + cozmo_blockly_path + ' and ' + thymio_blockly_path)
 
 				self.render(blockly_extension_path + 'index.html', includes=includes, cozmo_blocks=cozmo_blocks, thymio_blocks=thymio_blocks, name="Give Name")
 
@@ -135,7 +139,7 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 						relativePath = os.path.join(folder, filename)
 						if os.path.isfile(relativePath) and filename.endswith('.xml'):
 							storedFiles.append(removeXmlRegex.sub('', filename))
-					print("Returning files list: " + str(storedFiles))
+					atl_logger("Returning files list: " + str(storedFiles))
 					self.write(json.dumps(storedFiles).encode('utf-8'))
 					self.set_header('Content-type', 'application/json')
 				else:
@@ -148,7 +152,7 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 			def put(self, folder, file):
 				folder = self.folder
 				file = file.strip('/')
-				print('[Server] SavesHandler: Saving ' + file)
+				atl_logger('I','[Server] SavesHandler: Saving ' + file)
 				data = self.request.body
 				f = open(os.path.join(folder, file + '.xml'), 'wb')
 				f.write(data)
@@ -160,11 +164,11 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 				data = self.request.body
 				try:
 					code = str(data, 'utf-8')
-					print('Received code: ')
-					print(code)
+					atl_logger('I','Received code: \n\n' + str(code) + '\n\n')
 					target_bot = "THYMIO"
 					debug_level = 0
-					call_python_code_executor_service(target_bot, debug_level, code)
+					action = "RUN"
+					call_python_code_executor_service(target_bot, debug_level, code, action)
 				except Exception as e:
 					err = str(e)
 					raise tornado.web.HTTPError(500, err, reason=err)
@@ -172,27 +176,29 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 		class RobotTerminateHandler(tornado.web.RequestHandler):
 			@gen.coroutine
 			def post(self):
-				print('Terminating code')
-				with (yield self.application._lock.acquire()):
-					self.application._executor.stop()
-				self.write('OK')
+				atl_logger('I','Terminating code')
+				tornado.ioloop.IOLoop.current().stop()
+				target_bot = "THYMIO"
+				debug_level = 0
+				action = "STOP"
+				call_python_code_executor_service(target_bot, debug_level, code, action)
 
 		class WSBlocksSubHandler(tornado.websocket.WebSocketHandler):
 			def open(self):
-				print('[Server] WSBlocksSub client connected')
+				atl_logger('I','[Server] WSBlocksSub client connected')
 				self.application._blocks = self
 
 			def on_close(self):
-				print('[Server] WSBlocksSub client disconnected')
+				atl_logger('I','[Server] WSBlocksSub client disconnected')
 
 			def on_message(self, message):
-				print('[Server] WSBlocksSub client message: ' + message)
+				atl_logger('I','[Server] WSBlocksSub client message: ' + message)
 				# echo message back to client
 				self.write_message(message)
 
 		class WSBlocksPubHandler(tornado.websocket.WebSocketHandler):
 			def open(self):
-				print('[Server]  WSBlocksSPub Handler client connected')
+				atl_logger('I','[Server]  WSBlocksSPub Handler client connected')
 
 			def on_message(self, message):
 				try:
@@ -202,24 +208,24 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 					pass
 
 			def on_close(self):
-				print('[Server]  WSConsolePub client disconnected')
+				atl_logger('I','[Server]  WSConsolePub client disconnected')
 
 		class WS3dSubHandler(tornado.websocket.WebSocketHandler):
 			def open(self):
-				print('[Server] 3dSub client connected')
+				atl_logger('I','[Server] 3dSub client connected')
 				self.application._ws3d = self
 
 			def on_close(self):
-				print('[Server] 3dSub client disconnected')
+				atl_logger('I','[Server] 3dSub client disconnected')
 
 			def on_message(self, message):
-				print('[Server] 3dSub client message: ' + message)
+				atl_logger('I','[Server] 3dSub client message: ' + message)
 				# echo message back to client
 				self.write_message(message)
 
 		class WS3dPubHandler(tornado.websocket.WebSocketHandler):
 			def open(self):
-				print('[Server] 3dPub client connected')
+				atl_logger('I','[Server] 3dPub client connected')
 
 			def on_message(self, message):
 				try:
@@ -229,7 +235,7 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 					pass
 
 			def on_close(self):
-				print('[Server] 3dPub client disconnected')
+				atl_logger('I','[Server] 3dPub client disconnected')
 
 
 		class basicRequestHandler(tornado.web.RequestHandler):
@@ -237,14 +243,6 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 				self.write('Hello, world!!!!!!')
 
 		# 	End of WebHandler definitions
-
-				# def stop(self):
-				# 	# with (yield self._lock.acquire()):
-				# 	# 	self._executor.stop()
-				# 	# 	tornado.ioloop.IOLoop.instance().stop()
-				# 	self._executor.stop()
-				# 	tornado.ioloop.IOLoop.instance().stop()
-
 
 		settings = {
 			"gallery_path": str(atl_IDE_webappserver_install_dir) + 'gallery/',
@@ -294,17 +292,13 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 		app.listen(self.get_parameter("webapp_port").value)
 		self.get_logger().info("I'm listening on port " + str(self.get_parameter("webapp_port").value))
 
-		app._executor = None # CodeExecutor(args.nonsecure, args.nocozmo, args.aruco)
 		app._lock = locks.Lock()
 		app._wsCamera = None
 		app._ws3d = None
 
-
-
 def main(args=None):
 	rclpy.init(args=args)
 	node = atl_IDE_webappserver_node()
-	print("Node =" +str(node))
 	rclpy.spin(node)
 	rclpy.shutdown()
 

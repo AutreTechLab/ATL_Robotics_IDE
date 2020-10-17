@@ -1,5 +1,4 @@
 /**
- * Blockly Demos: Cozmo
  *
  * Copyright 2012 Google Inc.
  * https://developers.google.com/blockly/
@@ -18,8 +17,8 @@
  */
 
 /**
- * @fileoverview JavaScript for Blockly's Cozmo demo.
- * @author maxosprojects
+ * @fileoverview JavaScript for ATL Robitics IDE.
+ * @author maxosprojects, autretechlab
  */
 'use strict';
 
@@ -33,7 +32,8 @@ var Code = {};
  */
 Code.LANGUAGE_NAME = {
   'en': 'English',
-  'fr': 'French'
+  'fr': 'French',
+  'de': 'German'
 };
 
 /**
