@@ -4,11 +4,11 @@ global.DOMParser = require('xmldom').DOMParser;
 global.document = new DOMParser().parseFromString('<xml/>');
 global.document.body = {};
 
-require('../closure-library/closure/goog/bootstrap/nodejs');
-global.Blockly = require('../blockly/blockly_uncompressed.js');
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/closure-library/closure/goog/bootstrap/nodejs');
+global.Blockly = require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly/blockly_uncompressed.js');
 
-require('../blockly/blocks_compressed.js');
-require('../blockly/python_compressed.js');
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly/blocks_compressed.js');
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly/python_compressed.js');
 
 // require('../blockly/blocks/logic.js');
 // require('../blockly/blocks/loops.js');
@@ -28,15 +28,15 @@ require('../blockly/python_compressed.js');
 // require('../blockly/generators/python/variables.js');
 // require('../blockly/generators/python/procedures.js');
 
-require('../atl-blockly/js/blockly/blocks.js');
-require('../atl-blockly/js/blockly/python_generator.js');
-require('../cozmo-blockly/js/blockly/blocks.js');
-require('../cozmo-blockly/js/blockly/python_generator.js');
-require('../thymio-blockly/js/blockly/blocks.js');
-require('../thymio-blockly/js/blockly/python_generator.js');
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/atlide-blockly/js/blockly/blocks.js');
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/atlide-blockly/js/blockly/python_generator.js');
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/cozmo-blockly/js/blockly/blocks.js');
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/cozmo-blockly/js/blockly/python_generator.js');
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/thymio-blockly/js/blockly/blocks.js');
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/thymio-blockly/js/blockly/python_generator.js');
 
 //require('../blockly/msg/messages.js');
-require('../blockly/msg/js/en.js'); // fix ATL issue  #10
+require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly/msg/js/en.js'); // fix ATL issue  #10
 
 Blockly.Python.STATEMENT_PREFIX = 'bot.highlight(%1, AtlDebugLevel)\n' ;
 
@@ -56,7 +56,7 @@ app.post('/translate', function (req, res) {
   res.status(200).send(translate(req.body));
 });
 
-var server = app.listen(9091, 'localhost', function () {
+var server = app.listen(8081, 'localhost', function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('Cozmo Blockly XML AST -> Python translator service started at http://%s:%s', host, port);
