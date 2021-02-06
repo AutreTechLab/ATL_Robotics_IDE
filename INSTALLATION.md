@@ -18,6 +18,7 @@
 - `sudo apt update`
 - `sudo apt install ros-foxy-ros-base`
 - `source /opt/ros/foxy/setup.bash`
+- `sudo apt install python3-colcon-common-extensions`
 
 # Python
 - `sudo apt install -y python3-pip`
@@ -29,11 +30,18 @@
 # npm
 - `sudo apt install npm` 
 
-### Node.js 
-- `cd ATL_Robotics_IDE/webapp_root/nodejs`
+# Configure AutreTechLab/ATL_Robotics_IDE
+-`git clone https://github.com/AutreTechLab/ATL_Robotics_IDE.git`
+- `cd ~/ATL_Robotics_IDE/webapp_root/nodejs`
 - `npm install`
+- `cd ~/ATL_Robotics_IDE/ros2_ws`
+- `source /opt/ros/foxy/setup.bash`
+- `colcon build`
+- `. ./env.bash`
 
-   
+
+
+# TODO Webots and Cozmo no longer needed on this module 
 ### WeBots
 - `wget -qO- https://cyberbotics.com/Cyberbotics.asc | sudo apt-key add -`
 - `sudo apt-add-repository 'deb https://cyberbotics.com/debian/ binary-amd64/'`
