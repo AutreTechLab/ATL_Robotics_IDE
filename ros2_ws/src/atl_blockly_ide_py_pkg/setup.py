@@ -21,7 +21,8 @@ setup(
     entry_points={
         'console_scripts': [
             "atl_ide_webappserver_node = atl_blockly_ide_py_pkg.atl_ide_webappserver_node:main",
-            "atl_ide_python_code_executor_node = atl_blockly_ide_py_pkg.atl_python_code_executor_node:main"
+            "atl_ide_python_code_executor_node = atl_blockly_ide_py_pkg.atl_python_code_executor_node:main",
+            "atl_ide_session_manager_node = atl_blockly_ide_py_pkg.atl_ide_session_manager_node:main"
         ],
     },
 )
