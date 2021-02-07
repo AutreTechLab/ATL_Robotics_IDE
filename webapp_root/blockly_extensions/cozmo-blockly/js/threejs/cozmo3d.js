@@ -456,7 +456,7 @@ function Cozmo3d() {
     if (that._initialized) {
       return;
     }
-
+    alert("init");
     that._scene = new THREE.Scene();
     var canvas = document.getElementById("canvas_3d");
     var width = $(canvas).width();

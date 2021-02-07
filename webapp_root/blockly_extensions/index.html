@@ -16,16 +16,32 @@
   <script src="cozmo-blockly/js/threejs/AnaglyphEffectOld.js"></script>
   <script src="cozmo-blockly/js/threejs/OrbitControls.js"></script>
 
-  <!-- Includes block -->
+
+  <!--  TODO Evaluate the below -->
+  <link rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'/>
+  <link type="text/css" rel="stylesheet" href='https://www.cyberbotics.com/jquery-ui-layout/1.4.4/layout-default.css' />
+  <script src='https://code.jquery.com/jquery-3.1.1.min.js' integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=' crossorigin='anonymous'></script>
+  <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js' integrity='sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=' crossorigin='anonymous'></script>
+  <script src='https://www.cyberbotics.com/jquery-ui-layout/1.4.4/jquery.layout.js'></script>
+
+  <link type="text/css" rel="stylesheet" href='https://www.cyberbotics.com/wwi/R2020b/wwi.css' />
+  <link type="text/css" rel="stylesheet" href='webots/resources/web/streaming_viewer/style.css' />
+  <script src='https://www.cyberbotics.com/jquery-dialogextend/2.0.4/jquery.dialogextend.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js'></script>
+  <script src="https://www.cyberbotics.com/wwi/R2020b/webots.min.js"></script>
+  <script src="webots/resources/web/streaming_viewer/atlide_setup_viewer.js"></script>
+
+
+<!--   Includes block-->
 {% raw includes %}
   <!-- End Includes block -->
 
   <script src="cozmo-blockly/js/threejs/fonts.js"></script>
-  <script src="cozmo-blockly/js/threejs/cozmo3d.js"></script>
+  <script src="cozmo-blockly/js/threejs/cozmo3d.js"></script> <!-- TODO Remove after treejs to webots replacement -->
   <script src="cozmo-blockly/js/blockly/blocks.js"></script>
   <script src="cozmo-blockly/js/blockly/python_generator.js"></script>
   <script src="cozmo-blockly/js/ws.js"></script>
-  <script src="cozmo-blockly/js/code.js"></script>
+  <script src="atlide-blockly/js/code.js"></script>
   <script src="atlide-blockly/js/blockly/blocks.js"></script>
   <script src="atlide-blockly/js/blockly/python_generator.js"></script>
   <script src="thymio-blockly/js/blockly/blocks.js"></script>
@@ -36,7 +52,7 @@
   The ATL language strings are activated at the end of the code.js file.
   -->
 
-  <script src="cozmo-blockly/js/threejs/maze.js"></script>
+  <script src="cozmo-blockly/js/threejs/maze.js"></script> <!-- TODO Remove after treejs to webots replacement -->
 </head>
 <body>
 
@@ -61,20 +77,22 @@
         <table width="100%">
           <tr id="tabRow" height="1em">
             <td id="tab_blocks" class="tabon">...</td>
+<!--         Tabs in the Blockly Workspace   -->
             <td class="tabmin">&nbsp;</td>
             <td id="tab_camera" class="taboff">Camera</td>
             <td class="tabmin">&nbsp;</td>
-            <td id="tab_3d" class="taboff">3D</td>
+            <td id="tab_3d" class="taboff">3D Simulation</td>
             <td class="tabmin">&nbsp;</td>
             <td id="tab_python" class="taboff">Python</td>
             <td class="tabmin">&nbsp;</td>
             <td id="tab_xml" class="taboff">XML</td>
             <td class="tabmin">&nbsp;</td>
             <td id="tab_console" class="taboff">Console</td>
+<!--         Buttons in the Blockly Workspace   -->
             <td class="tabmax">
-              <button id="stopButton" class="button" style="font-size: 1em; height: 25px; vertical-align: top;">
-                <i class="fa fa-stop" style="opacity: 0.6;"></i>
-              </button>
+<!--              <button id="backButton" class="button" style="font-size: 1em; height: 25px; vertical-align: top;">-->
+<!--                <i class="fa fa-back" style="opacity: 0.6;"></i>-->
+<!--              </button>-->
               <button id="trashButton" class="notext" style="font-size: 1em; height: 25px; vertical-align: top;" title="...">
                 <i class="fa fa-trash" style="opacity: 0.6;"></i>
               </button>
@@ -86,6 +104,9 @@
               </button>
               <button id="runButton" class="notext primary" style="font-size: 1em; height: 25px; vertical-align: top;" title="...">
                 <i class="fa fa-play" style="font-color: white;"></i>
+              </button>
+              <button id="stopButton" class="button" style="font-size: 1em; height: 25px; vertical-align: top;">
+                <i class="fa fa-stop" style="opacity: 0.6;"></i>
               </button>
             </td>
           </tr>
@@ -104,19 +125,16 @@
     <div id="cozmo_messages"></div>
   </div>
   <div id="content_3d" class="content">
-    <div style="position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.5); padding: 5px;">
-      <a href="#" style="color: #ccccff; text-decoration: none;" onclick="Code.toggleAnaglyph();return false;">Toggle Anaglyph</a>
+    <b>Webots streaming viewer</b>
+        <input id="WebotsStreamingConnectButton" type="button" value="Connect" onclick="webots_streaming_connect()" />
+    <div id="content_3d_viewer" width="1000" height="1000">
     </div>
-    <div style="position: absolute; top: 50px; left: 20px; background: rgba(0,0,0,0.5); padding: 5px;">
-      <a href="#" style="color: #ccccff; text-decoration: none;" onclick="Code.toggleGrid();return false;">Toggle Grid</a>
-    </div>
-    <canvas id="canvas_3d" style="width: 100%; height: 100%;"></canvas>
   </div>
   <pre id="content_javascript" class="content"></pre>
   <pre id="content_python" class="content"></pre>
-  <pre id="content_php" class="content"></pre>
-  <pre id="content_lua" class="content"></pre>
-  <pre id="content_dart" class="content"></pre>
+<!--  <pre id="content_php" class="content"></pre>-->
+<!--  <pre id="content_lua" class="content"></pre>-->
+<!--  <pre id="content_dart" class="content"></pre>-->
   <textarea id="content_xml" class="content" wrap="off"></textarea>
   <pre id="content_console" class="content" wrap="off">
     <div id="console_messages"></div>
