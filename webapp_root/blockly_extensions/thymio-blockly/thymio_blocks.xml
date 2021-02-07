@@ -1,6 +1,6 @@
 
       <category name="Thymio" colour="10">
-            <category name="Evénements" colour="10">
+            <category name="{catThymioEvents}" colour="10">
             <block type="thymio_initialize"></block>
             <block type="thymio_event_button"></block>
             <block type="thymio_event_prox"></block>

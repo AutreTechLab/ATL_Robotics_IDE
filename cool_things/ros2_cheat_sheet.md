@@ -8,5 +8,9 @@
 # Running Package
 * `ros2 run my_package my_node`
 
+# Monitoring 
+* `ros2 topic list `
+* `ros2 topic echo <topic>`
+
 # Troubleshooting 
 * `rqt` -> `Menu: Plugins -> Introspection -> Node Graph `

@@ -4,11 +4,11 @@ global.DOMParser = require('xmldom').DOMParser;
 global.document = new DOMParser().parseFromString('<xml/>');
 global.document.body = {};
 
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/closure-library/closure/goog/bootstrap/nodejs');
-global.Blockly = require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly/blockly_uncompressed.js');
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/closure-library/closure/goog/bootstrap/nodejs');
+global.Blockly = require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly/blockly_uncompressed.js');
 
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly/blocks_compressed.js');
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly/python_compressed.js');
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly/blocks_compressed.js');
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly/python_compressed.js');
 
 // require('../blockly/blocks/logic.js');
 // require('../blockly/blocks/loops.js');
@@ -28,17 +28,19 @@ require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockl
 // require('../blockly/generators/python/variables.js');
 // require('../blockly/generators/python/procedures.js');
 
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/atlide-blockly/js/blockly/blocks.js');
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/atlide-blockly/js/blockly/python_generator.js');
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/cozmo-blockly/js/blockly/blocks.js');
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/cozmo-blockly/js/blockly/python_generator.js');
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/thymio-blockly/js/blockly/blocks.js');
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly_extensions/thymio-blockly/js/blockly/python_generator.js');
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly_extensions/atlide-blockly/js/blockly/blocks.js');
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly_extensions/atlide-blockly/js/blockly/python_generator.js');
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly_extensions/cozmo-blockly/js/blockly/blocks.js');
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly_extensions/cozmo-blockly/js/blockly/python_generator.js');
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly_extensions/thymio-blockly/js/blockly/blocks.js');
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly_extensions/thymio-blockly/js/blockly/python_generator.js');
 
 //require('../blockly/msg/messages.js');
-require('/home/autretechlab/Documents/GitHub/ALT_Robotics_IDE/webapp_root/blockly/msg/js/en.js'); // fix ATL issue  #10
+require('/home/autretechlab/Documents/GitHub/ATL_Robotics_IDE/webapp_root/blockly/msg/js/en.js'); // fix ATL issue  #10
 
-Blockly.Python.STATEMENT_PREFIX = 'bot.highlight(%1, AtlDebugLevel)\n' ;
+Blockly.Python.STATEMENT_PREFIX = 'ideWsBlocks.highlight(%1, AtlDebugLevel)\n' ;
+Blockly.Python.STATEMENT_PREFIX = 'from atl_ide_modules import atlide_core\natlide_core.highlight(%1,AtlDebugLevel)\nprint(AtlDebugLevel)\n' ;
+
 
 var express = require('express');
 var bodyParser = require('body-parser')

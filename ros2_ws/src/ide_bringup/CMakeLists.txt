@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
-project(atl_ide_interfaces)
+project(ide_bringup)
+
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -12,15 +17,12 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
+# uncomment the following section in order to fill in
+# further dependencies manually.
+# find_package(<dependency> REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/IDEWEBAPP.msg"
-  "msg/PYTHONCODEEXECUTORSTATUS.msg"
-  "msg/ATLIDESESSIONMANAGER.msg"
-  "srv/IDEREGISTERROBOT.srv"
-  "srv/PYTHONCODEEXECUTOR.srv"
+install(DIRECTORY
+    launch
+    DESTINATION share/${PROJECT_NAME}
 )
-
-
 ament_package()

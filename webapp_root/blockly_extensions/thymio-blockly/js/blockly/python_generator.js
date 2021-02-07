@@ -39,8 +39,18 @@ Blockly.Python['thymio_event_button'] = function(block) {
   var dropdown_button = block.getFieldValue('BUTTON');
   var dropdown_mode = block.getFieldValue('MODE');
   var statements_handler = Blockly.Python.statementToCode(block, 'HANDLER');
-  // TODO: Assemble Python into code variable.
-  var code = '...\n';
+  // First, add a 'global' statement for every variable that is not shadowed by
+  // a local parameter.
+  var globals = [];
+  for (var i = 0, varName; varName = block.workspace.variableList[i]; i++) {
+    globals.push(Blockly.Python.variableDB_.getName(varName,
+      Blockly.Variables.NAME_TYPE));
+  }
+  globals = globals.length ? '  global ' + globals.join(', ') + '\n' : '';
+  var branch = Blockly.Python.statementToCode(block, 'BODY');
+  branch = Blockly.Python.addLoopTrap(branch, block.id) ||
+    Blockly.Python.PASS;
+  var code = 'def thymio_event_button(evt, *, obj, tap_count, tap_duration, tap_intensity, **kwargs):\n' + globals + Blockly.Python.INDENT + 'tapped_cube = obj\n' + branch;
   return code;
 };
 
@@ -98,3 +108,12 @@ Blockly.Python['thymio_drive_cm'] = function(block) {
   var code = '...\n';
   return code;
 };
+
+Blockly.Python['thymio_actuator_timer'] = function(block) {
+  var dropdown_name = block.getFieldValue('NAME');
+  var number_name = block.getFieldValue('NAME');
+  // TODO: Assemble Python into code variable.
+  var code = '...\n';
+  return code;
+};
+

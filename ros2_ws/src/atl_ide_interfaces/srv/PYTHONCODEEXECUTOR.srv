@@ -1,6 +1,6 @@
 string target_bot   # COZMO, THYMIOII
-int64 debug_level   # 0 = off, 1 = debug code, 2 = load debuggable blockly js
+string remote_ip    #
 string code         # XML code
-string action       # RUN, STOP
+string action       # READY (0), RUN (1), STOP (2)
 ---
 bool success        # True when registration is OK, otherwise false
