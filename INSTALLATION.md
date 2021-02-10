@@ -26,6 +26,7 @@
 
 ### Tornado web application server: 
 - `pip3 install --user tornado`
+- `pip3 install ws4py`
 
 # npm
 - `sudo apt install npm` 
