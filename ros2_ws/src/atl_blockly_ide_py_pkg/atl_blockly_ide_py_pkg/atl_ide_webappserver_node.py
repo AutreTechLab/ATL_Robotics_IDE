@@ -38,11 +38,7 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 		super().__init__("atl_IDE_webappserver_node") # MODIFY NAME
 		self.declare_parameter("webapp_port", 8080)
 		self.declare_parameter("debug_level", 0)
-<<<<<<< HEAD
 		self.declare_parameter("atl_IDE_webappserver_install_dir", '/home/ubuntu/ATL_Robotics_IDE/webapp_root/')
-=======
-		self.declare_parameter("atl_IDE_webappserver_install_dir", '~/ATL_Robotics_IDE/webapp_root/')
->>>>>>> b17004953b99215a718430160de9f23a2ddd368d
 		self.get_logger().info("atl_IDE_webappserver_install_dir: " + str(self.get_parameter("atl_IDE_webappserver_install_dir").value))
 
 		self.IDEWEBAPP_status_publisher_ = self.create_publisher(IDEWEBAPP, "IDEWEBAPP_publisher", 10)
