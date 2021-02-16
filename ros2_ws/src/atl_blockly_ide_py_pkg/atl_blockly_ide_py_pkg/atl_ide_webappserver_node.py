@@ -14,6 +14,7 @@ import socket
 from ws4py.client.threadedclient import WebSocketClient
 
 try:
+	import tornado.httpserver
 	import tornado.ioloop
 	import tornado.web
 	import tornado.websocket
