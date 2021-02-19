@@ -337,7 +337,7 @@ Code.renderContent = function() {
     Code.workspace.setVisible(true);
     var parsedUrl = new URL(window.location.href);
     var atl_IDE_browser_host = parsedUrl.hostname;
-    var ws = new WebSocket("ws://" + atl_IDE_browser_host + ":8080/blocksSub"); //DODO
+    var ws = new WebSocket("wss://" + atl_IDE_browser_host + ":8080/blocksSub"); //DODO
         ws.onopen = function() {
         ws.send("Server HOST Host =" + atl_IDE_browser_host);
             };
@@ -349,7 +349,7 @@ Code.renderContent = function() {
     Code.startCamera();
     var parsedUrl = new URL(window.location.href);
     var atl_IDE_browser_host = parsedUrl.hostname;
-    var ws = new WebSocket("ws://" + atl_IDE_browser_host + ":8080/cozmo_messagesSub"); // DODO
+    var ws = new WebSocket("wss://" + atl_IDE_browser_host + ":8080/cozmo_messagesSub"); // DODO
     ws.onopen = function() {
         var msg = "<hr>";
         ws.send(msg);
@@ -363,7 +363,7 @@ Code.renderContent = function() {
   } else if (Code.selected == 'console') {
         var parsedUrl = new URL(window.location.href);
         var atl_IDE_browser_host = parsedUrl.hostname;
-        var ws = new WebSocket("ws://" + atl_IDE_browser_host + ":8080/consoleSub"); // DODO
+        var ws = new WebSocket("wss://" + atl_IDE_browser_host + ":8080/consoleSub"); // DODO
         ws.onopen = function() {
         ws.send("Console Messages");
             };
@@ -743,7 +743,7 @@ Code.startCamera = function() {
   };
 
   var loc = window.location;
-  var wsurl = 'ws://' + loc.host + '/camSub';
+  var wsurl = 'wss://' + loc.host + '/camSub';
   Code.camera.doConnect(wsurl, true);
 }
 
@@ -777,7 +777,7 @@ Code.startWs = function(onConnectFunc) {
   };
 
   var loc = window.location;
-  var wsurl = 'ws://' + loc.host + '/WsSub';
+  var wsurl = 'wss://' + loc.host + '/WsSub';
   Code.cozmoWs.doConnect(wsurl);
 }
 
@@ -807,7 +807,7 @@ Code.startConsole = function() {
   };
 
   var loc = window.location;
-  var wsurl = 'ws://' + loc.host + '/consoleSub';
+  var wsurl = 'wss://' + loc.host + '/consoleSub';
   Code.console.doConnect(wsurl, true);
 }
 
