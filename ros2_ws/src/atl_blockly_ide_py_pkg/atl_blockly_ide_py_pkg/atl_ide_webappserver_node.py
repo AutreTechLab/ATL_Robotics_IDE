@@ -12,9 +12,9 @@ import json
 from functools import partial
 import socket
 from ws4py.client.threadedclient import WebSocketClient
+import ssl
 
 try:
-    import tornado.httpserver
     import tornado.ioloop
     import tornado.web
     import tornado.websocket
@@ -26,6 +26,8 @@ try:
     from tornado.queues import Queue
 except ImportError:
     print("Cannot import Tornado: Do `pip3 install --user tornado` to install")
+
+from tornado.httpserver import HTTPServer
 
 # Global variables
 atl_ide_debug_level = 1 # 0 = off, 1 = debug inflo, 2 = load debuggable blockly js
@@ -269,7 +271,8 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
             "atlide_blockly_path": str(atl_IDE_webappserver_install_dir) + 'blockly_extensions/atlide_blockly/blockly/',
             "cozmo_blockly_path": str(atl_IDE_webappserver_install_dir) + 'blockly_extensions/cozmo_blockly/blockly/',
             "thymio_blockly_path": str(atl_IDE_webappserver_install_dir) + 'blockly_extensions/thymio_blockly/blockly/',
-            "webots_path": str(atl_IDE_webappserver_install_dir) + 'webots/resources/web/streaming_viewer/',
+            #"webots_path": str(atl_IDE_webappserver_install_dir) + 'webots/resources/web/streaming_viewer/',
+            "webots_path": str(atl_IDE_webappserver_install_dir) + 'webots/',
             "cookie_secret": "61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
             'debug': True,
         }
@@ -304,9 +307,10 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
             # (r'/cozmo_messagesPub', CozmoBlockly.WSCozmo_messagesPubHandler),
         ],**settings)
         # app.listen(self.get_parameter("webapp_port").value)
+        data_dir = ""
         ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
         ssl_ctx.load_cert_chain(os.path.join(data_dir, "/etc/letsencrypt/live/services.autretechlab.cloud/cert.pem"),os.path.join(data_dir, "/etc/letsencrypt/live/services.autretechlab.cloud/privkey.pem"))
-        atlSaasWebServer = HTTPServer(application, ssl_options=ssl_ctx)
+        atlSaasWebServer = HTTPServer(app, ssl_options=ssl_ctx)
         atlSaasWebServer.listen(self.get_parameter("webapp_port").value)
         self.get_logger().info("I'm listening on port " + str(self.get_parameter("webapp_port").value))
 
