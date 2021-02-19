@@ -303,8 +303,11 @@ class atl_IDE_webappserver_node(Node): # MODIFY NAME
 			# (r'/cozmo_messagesSub', CozmoBlockly.WSCozmo_messagesSubHandler),
 			# (r'/cozmo_messagesPub', CozmoBlockly.WSCozmo_messagesPubHandler),
 		],**settings)
-
-		app.listen(self.get_parameter("webapp_port").value)
+		# app.listen(self.get_parameter("webapp_port").value)
+                #ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+                ssl_ctx.load_cert_chain(os.path.join(data_dir, "/etc/letsencrypt/live/services.autretechlab.cloud/cert.pem"),os.path.join(data_dir, "/etc/letsencrypt/live/services.autretechlab.cloud/privkey.pem"))
+                atlSaasWebServer = HTTPServer(application, ssl_options=ssl_ctx)
+                atlSaasWebServer.listen(self.get_parameter("webapp_port").value)
 		self.get_logger().info("I'm listening on port " + str(self.get_parameter("webapp_port").value))
 
 		app._lock = locks.Lock()
